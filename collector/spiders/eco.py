@@ -17,7 +17,7 @@ date = datetime.datetime.now()
 class EcoSpider(Spider):
     name = 'eco'
     allowed_domains = ['economist.com']
-    start_urls = ['https://www.economist.com/printedition'] 
+    start_urls = ['https://www.economist.com/ap/printedition/'] 
     custom_settings = { 
         'USER_AGENT': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36',
         'DOWNLOAD_DELAY' : 3,
@@ -33,7 +33,7 @@ class EcoSpider(Spider):
         loader.add_css('title', 'h1 > span.flytitle-and-title__title::text')
         loader.add_css('desc', '.blog-post__rubric::text')
 
-        sec = response.url.split('/')[-2]
+        sec = response.url.split('/')[-5]
         sec = sec.strip('-')
         loader.add_value('section',sec)
 

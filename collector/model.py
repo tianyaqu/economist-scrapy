@@ -19,8 +19,7 @@ class BaseExtModel(Model):
         #database = psql_db
 
 class Article(BaseExtModel):
-    url = TextField(default="")
-    name = TextField(unique=True)
+    name = TextField(default="")
     title = TextField(default="")
     desc    = TextField(default="")
     fly = TextField(default="")
@@ -30,7 +29,7 @@ class Article(BaseExtModel):
     imgs = ArrayField(field_class=TextField,null=True)
     section = TextField(default="")
     edition = DateField()
-    origin = TextField(default="")
+    origin = TextField(unique=True)
     ts = DateTimeField(default=datetime.datetime.now)
     tsv = TSVectorField()
 
