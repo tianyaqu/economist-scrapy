@@ -70,8 +70,8 @@ ITEM_PIPELINES = {
 
 POSTGRESQL_CONFIG = {            
     'db': 'your db',        
-    'user': 'your user',   
-    'passwd': 'your secerets',   
+    'user': 'your db user name',   
+    'passwd': 'your db pasword',   
 }                           
 
 #DUPEFILTER_CLASS = 'scrapy.dupefilters.BaseDupeFilter'

@@ -14,19 +14,31 @@ use crontab tools to add crawl job each week
 
 # install
 
-install postgresql first
+1. install postgresql first
 
 > yum install postgresql-server postgresql-contrib
+
 > postgresql-setup initdb
 
-install python packages
+2. install python packages
 
 > pip install -r requirement.txt
 
-install nlktk corporas
+3. install nlktk corporas
 
 > ipython
+
 > import nltk
+
 > nltk.download('punkt')
+
 > nltk.download('brown')
+
 > nltk.download('averaged_perceptron_tagger')
+
+# crawl
+ > mv  collector/setting.py.example collector/setting.py
+
+ > change the db user and password
+
+ > scrapy crawl eco
