@@ -1,0 +1,7 @@
+scrapy
+bs4
+psycopg2
+peewee
+sklearn
+numpy
+scipy
