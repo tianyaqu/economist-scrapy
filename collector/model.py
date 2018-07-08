@@ -37,6 +37,7 @@ class Article(BaseExtModel):
         indexes = (
             (('edition',), False),
             (('section',), False),
+            (('name',), False),
         )
 
 class Edition(BaseExtModel):
@@ -57,6 +58,7 @@ if __name__ == '__main__':
     psql_db.connect()
     psql_db.create_tables([Edition, Article])
 
+    '''
     date = datetime.datetime.now()
     e = Edition(edition=date, cover='cover')
     e.save()
@@ -64,4 +66,5 @@ if __name__ == '__main__':
     content='hello world'
     a = Article(edition=date,name='aaaid',title='atitle',imgs=['a','b'],tsv=fn.to_tsvector(content))
     a.save()
+    '''
 
