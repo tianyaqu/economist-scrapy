@@ -7,6 +7,7 @@ import scrapy
 from bs4 import BeautifulSoup
 import bs4
 import datetime
+import shortuuid
 
 class DefaultItemLoader(ItemLoader):
     default_output_processor = TakeFirst()
@@ -28,7 +29,7 @@ class EcoSpider(Spider):
     def parse_item(self, response):
         loader = DefaultItemLoader(item=CollectorItem(), response = response)
         loader.add_value('url', response.url )
-        loader.add_value('name', response.url.split('/')[-1] )
+        loader.add_value('name', shortuuid.uuid() )
         loader.add_css('fly', 'h1 > span.flytitle-and-title__flytitle::text' )
         loader.add_css('title', 'h1 > span.flytitle-and-title__title::text')
         loader.add_css('desc', '.blog-post__rubric::text')
