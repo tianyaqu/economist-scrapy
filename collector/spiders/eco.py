@@ -27,6 +27,7 @@ class EcoSpider(Spider):
     }
 
     def parse_item(self, response):
+        section = response.meta['section'] 
         loader = DefaultItemLoader(item=CollectorItem(), response = response)
         loader.add_value('url', response.url )
         loader.add_value('name', shortuuid.uuid() )
@@ -34,9 +35,7 @@ class EcoSpider(Spider):
         loader.add_css('title', 'h1 > span.flytitle-and-title__title::text')
         loader.add_css('desc', '.blog-post__rubric::text')
 
-        sec = response.url.split('/')[-5]
-        sec = sec.strip('-')
-        loader.add_value('section',sec)
+        loader.add_value('section',section)
 
         global date
         loader.add_value('edition', date)
@@ -87,7 +86,15 @@ class EcoSpider(Spider):
             item['edition'] = date
             yield item
 
-        urls = [h['href'] for h in root.select(".list__link")]
-        for url in urls:
-            print('new', response.urljoin(url))
-            yield scrapy.Request(response.urljoin(url),callback=self.parse_item)
+        secName = ""
+        order = 0
+        for item in root.select('.main-content .list__item'):
+            children = item.select('.list__title')
+            if len(children) > 0:
+                secName = children[0].text
+            urls = [h['href'] for h in item.select(".list__link")]
+
+            for url in urls:
+                print('new', response.urljoin(url), ' sec ', secName)
+                yield scrapy.Request(response.urljoin(url),callback=self.parse_item,meta={'section':secName,'order':order})
+                order = order+1
