@@ -23,7 +23,7 @@ class CollectorItem(scrapy.Item):
     imgs = scrapy.Field(
         output_processor = Identity()
     )
-    section = scrapy.Field()
+    order = scrapy.Field()
     cover   = scrapy.Field()
     atype  = scrapy.Field()
     

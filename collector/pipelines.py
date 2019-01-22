@@ -6,6 +6,7 @@
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 import json
+import redis
 import datetime
 from collector.summary import Summary
 from collector.model import Edition, Article
@@ -43,6 +44,41 @@ class CollectorPipeline(object):
             print('insert edition error ',e)
             pass   
 
+    def genList(self, name, edition, section, order) :
+        smap = {
+            "The world this week": 1,
+            "Leaders" : 2,
+            "Letters" : 3,
+            "Briefing": 4,
+            "United States":5,
+            "The Americas" : 6,
+            "Asia":7,
+            "China" : 8,
+            "Middle East and Africa" : 9,
+            "Europe" : 10,
+            "Britain" : 11,
+            "International" : 12,
+            "Special Report" : 13,
+            "Business" : 14,
+            "Finance and economics" : 15,
+            "Science and technology": 16,
+            "Books and arts" : 17,
+            "Obituary" : 18,
+            "Economic and financial indicators" : 19,
+        }
+
+        score = order
+        sec = '0'
+        if section in smap :
+            score += smap[section] * 20 
+            sec = str(smap[section])
+        volKey = 'eco_edition_' + edition.strftime('%Y%m%d')
+        secKey = 'eco_edition_' + edition.strftime('%Y%m%d') + "_" + sec
+        r = redis.Redis(host='10.25.96.3', port=6379, decode_responses=True)
+        r.zadd(volKey, name, score)
+        r.zadd(secKey, name, score)
+        print(name,' sec: ', section, ' order ',order, ' score ', score)
+
     def process_item(self, item, spider):
         if item.get('atype', 0) == 1 :
             spider.logger.info('type editon cover %s %s',  item['cover'], item['edition'].strftime('%Y%m%d'))
@@ -55,4 +91,5 @@ class CollectorPipeline(object):
                 summ = self.summary.gen(item.get('title',''), content)
             self.add_article(item['edition'], item.get('section',''), item.get('title',''), item.get('fly',''), item.get('desc',''), item.get('name',''), item['url'], content, item.get('imgs',[]), summ)
             print('insert article ', item.get('url',''), ' summary ', summ)
+            self.genList(item.get('name',''), item['edition'], item.get('section',''), item.get('order',0))
         return item

@@ -5,3 +5,4 @@ peewee
 sklearn
 numpy
 scipy
+python-dateutil
