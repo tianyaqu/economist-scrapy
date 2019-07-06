@@ -16,16 +16,19 @@ from peewee import fn
 class CollectorPipeline(object):
     __metaclass__ = Singleton
    
-    def __init__(self,db, user, passwd):
+    def __init__(self,host, port, passwd):
         self.summary = Summary()
+        self.redis_host = host
+        self.redis_port = port
+        self.redis_passwd = passwd
 
     @classmethod 
     def from_crawler(cls, crawler):
-        psql_conf = crawler.settings.getdict("POSTGRESQL_CONFIG")
+        redis_conf = crawler.settings.getdict("REDIS_CONFIG")
         return cls(
-            db = psql_conf.get('db'),
-            user = psql_conf.get('user'),
-            passwd = psql_conf.get('passwd')
+            host = redis_conf.get('host'),
+            port = redis_conf.get('port'),
+            passwd = redis_conf.get('passwd')
         )
 
     
@@ -74,9 +77,12 @@ class CollectorPipeline(object):
             sec = str(smap[section])
         volKey = 'eco_edition_' + edition.strftime('%Y%m%d')
         secKey = 'eco_edition_' + edition.strftime('%Y%m%d') + "_" + sec
-        r = redis.Redis(host='10.25.96.3', port=6379, decode_responses=True)
-        r.zadd(volKey, name, score)
-        r.zadd(secKey, name, score)
+        r = redis.Redis(host=self.redis_host, port=self.redis_port,password=self.redis_passwd ,decode_responses=True)
+        item = {
+            name : score,
+        }
+        r.zadd(volKey, item)
+        r.zadd(secKey, item)
         print(name,' sec: ', section, ' order ',order, ' score ', score)
 
     def process_item(self, item, spider):

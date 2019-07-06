@@ -74,6 +74,12 @@ POSTGRESQL_CONFIG = {
     'passwd': 'your db pasword',   
 }                           
 
+REDIS_CONFIG = {            
+    'host': '127.0.0.1',        
+    'port': 6379,   
+    'passwd': 'passsss',   
+}                           
+
 #DUPEFILTER_CLASS = 'scrapy.dupefilters.BaseDupeFilter'
 
 LOG_LEVEL = 'DEBUG'
