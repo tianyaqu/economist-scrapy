@@ -24,8 +24,11 @@ def get_last_friday():
 class EcoSpider(Spider):
     name = 'eco'
     allowed_domains = ['economist.com']
-    entry  = 'https://www.economist.com/printedition/' + get_last_friday()
+    last_friday = get_last_friday()
+    entry  = 'https://www.economist.com/printedition/' + last_friday
     print(entry)
+    global date
+    date = datetime.datetime.strptime(last_friday,"%Y-%m-%d")
     start_urls = [entry] 
     custom_settings = { 
         'USER_AGENT': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36',
@@ -87,8 +90,6 @@ class EcoSpider(Spider):
         if len(tags) > 0:
             cover = tags[0].img['src']
             dateStr = cover.split('/')[-1].split('_')[0]
-            global date
-            date = datetime.datetime.strptime(dateStr,"%Y%m%d")
             atype = 1
             item = CollectorItem()
             item['atype'] = atype
